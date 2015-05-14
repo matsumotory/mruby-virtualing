@@ -45,3 +45,8 @@ Virtual.new({
 
 }).run
 ```
+
+## run
+```
+sudo ./mruby example.rb
+```
