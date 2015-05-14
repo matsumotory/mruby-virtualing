@@ -15,6 +15,7 @@ MRuby::Build.new do |conf|
   conf.gembox 'full-core'
   conf.gem :github => 'iij/mruby-process'
   conf.gem :github => 'matsumoto-r/mruby-cgroup'
+  conf.gem :github => 'matsumoto-r/mruby-virtualing'
 end
 ```
 
