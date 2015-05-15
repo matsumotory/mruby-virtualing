@@ -23,3 +23,5 @@ Virtual.new({
 
 }).run
 
+# umount example
+# for dir in `mount | grep /var/httpd-jail | awk '{print $3}'`; do sudo umount $dir; done
