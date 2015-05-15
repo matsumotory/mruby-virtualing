@@ -1,6 +1,6 @@
 # virtualing (mruby-virtualing)
 
-creating jail environment, limitting resource and separating filesystem
+creating jail environment, limiting resouces, assigning IP address and separating filesystem
 
 using https://github.com/kazuho/jailing
 
