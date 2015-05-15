@@ -1,5 +1,7 @@
 # virtualing (mruby-virtualing)
 
+virtualing is a lightweight virtualization tool for linux processes. The size of virtualing binary is about 600Kbyte.
+
 creating jail environment, limiting resouces, assigning IP address and separating filesystem
 
 using https://github.com/kazuho/jailing
