@@ -8,16 +8,12 @@ using https://github.com/kazuho/jailing
 
 See https://github.com/kazuho/jailing
 
-## mruby build with mruby-virtualing
-```ruby
-MRuby::Build.new do |conf|
-  toolchain :gcc
-  conf.gembox 'full-core'
-  conf.gem :github => 'iij/mruby-process'
-  conf.gem :github => 'matsumoto-r/mruby-cgroup'
-  conf.gem :github => 'matsumoto-r/mruby-virtualing'
-end
+## build virtualing
 ```
+rake
+```
+
+and create `virtualing` binary.
 
 ## example
 ```ruby
@@ -62,5 +58,5 @@ Virtual.new({
 
 ## run
 ```
-sudo ./mruby example.rb
+sudo ./virtualing exmample.rb
 ```
