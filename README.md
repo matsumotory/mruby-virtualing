@@ -1,4 +1,4 @@
-# mruby-virtualing
+# virtualing (mruby-virtualing)
 
 creating jail environment, limitting resource and separating filesystem
 
