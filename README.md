@@ -13,7 +13,7 @@ See https://github.com/kazuho/jailing
 rake
 ```
 
-and create `virtualing` binary.
+and create `virtualing` binary into current directory.
 
 ## example
 ```ruby
