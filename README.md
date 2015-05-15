@@ -55,6 +55,9 @@ Virtual.new({
 
 # umount example
 # for dir in `mount | grep /var/httpd-jail | awk '{print $3}'`; do sudo umount $dir; done
+
+# del vip
+# ip addr del $VIP/24 dev eth0
 ```
 
 ## run
