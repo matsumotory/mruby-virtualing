@@ -17,6 +17,7 @@ and create `virtualing` binary into current directory.
 
 ## example
 ```ruby
+# httpd.rb
 Virtual.new({
 
   :resource => {
@@ -58,5 +59,5 @@ Virtual.new({
 
 ## run
 ```
-sudo ./virtualing exmample.rb
+sudo ./virtualing httpd.rb
 ```
