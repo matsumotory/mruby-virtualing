@@ -7,12 +7,25 @@ class Virtual
     setup_ipalias @config[:ip]
     setup_chroot @config[:jail]
   end
-  def setup_cgroup config
-    # TODO: implement blkio and mem
-    c = Cgroup::CPU.new "mruby-virtual"
+  def setup_cgroup_cpu config
+    group = config[:group] ? config[:group] : "mruby-virtual"
+    c = Cgroup::CPU.new group
     c.cfs_quota_us = config[:cpu_quota]
     c.create
     c.attach
+  end
+  def setup_cgroup_blkio config
+    group = config[:group] ? config[:group] : "mruby-virtual"
+    io = Cgroup::BLKIO.new group
+    io.throttle_read_bps_device = "#{config[:blk_dvnd]} #{config[:blk_rbps]}" if config[:blk_rbps]
+    io.throttle_write_bps_device = "#{config[:blk_dvnd]} #{config[:blk_wbps]}" if config[:blk_wbps]
+    io.create
+    io.attach
+  end
+  def setup_cgroup config
+    # TODO: implement blkio and mem
+    setup_cgroup_cpu config if config[:cpu_quota]
+    setup_cgroup_blkio config if config[:blk_dvnd] && config[:blk_rbps] || config[:blk_wbps]
   end
   def setup_ipalias config
     # TODO: implement to mruby-netlink
