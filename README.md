@@ -24,11 +24,18 @@ end
 Virtual.new({
 
   :resource => {
-    # CPU 30%
+
+    :group => "httpd-jail",
+
+    # CPU Limit 30%
     :cpu_quota => 30000,
 
+    # IO Limit 10 MByte/sec
+    :blk_dvnd => "202:0",
+    :blk_rbps => 10485760,
+    :blk_wbps => 10485760,
+
     # TODO
-    #:io_rate => 30000,
     #:mem => 512,
   },
 
@@ -45,6 +52,9 @@ Virtual.new({
   },
 
 }).run
+
+# umount example
+# for dir in `mount | grep /var/httpd-jail | awk '{print $3}'`; do sudo umount $dir; done
 ```
 
 ## run
