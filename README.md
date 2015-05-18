@@ -26,16 +26,17 @@ Virtual.new({
 
     :group => "httpd-jail",
 
-    # CPU Limit 30%
+    # CPU [msec] exc: 30000 -> 30%
     :cpu_quota => 30000,
 
-    # IO Limit 10 MByte/sec
+    # IO [Bytes/sec]
     :blk_dvnd => "202:0",
     :blk_rbps => 10485760,
     :blk_wbps => 10485760,
 
-    # TODO
-    #:mem => 512,
+    # Memory [Bytes]
+    :mem => 512,
+
   },
 
   :jail => {
