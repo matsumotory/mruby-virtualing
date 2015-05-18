@@ -22,10 +22,18 @@ class Virtual
     io.create
     io.attach
   end
+  def setup_cgroup_mem config
+    group = config[:group] ? config[:group] : "mruby-virtual"
+    mem = Cgroup::MEMORY.new group
+    mem.limit_in_bytes = config[:mem]
+    mem.create
+    mem.attach
+  end
   def setup_cgroup config
     # TODO: implement blkio and mem
     setup_cgroup_cpu config if config[:cpu_quota]
     setup_cgroup_blkio config if config[:blk_dvnd] && config[:blk_rbps] || config[:blk_wbps]
+    setup_cgroup_mem config if config[:mem]
   end
   def setup_ipalias config
     # TODO: implement to mruby-netlink
