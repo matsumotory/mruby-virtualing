@@ -13,7 +13,7 @@ Virtual.new({
     :blk_wbps => 10485760,
 
     # Memory [Bytes]
-    :mem => 512,
+    :mem => 512 * 1024 * 1024,
 
   },
 
