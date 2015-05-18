@@ -20,6 +20,7 @@ Virtual.new({
     :path => "/usr/local/bin/jailing",
     :root => "/tmp/apache",
     :bind => ["/usr/local"],
+    :ro_bind => ["/usr/local/lib"],
     :cmnd => "/usr/local/apache/bin/httpd -X -f /usr/local/apache/conf/httpd.conf"
   },
 
