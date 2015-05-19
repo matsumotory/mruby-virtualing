@@ -1,6 +1,36 @@
 class Virtual
   def initialize c
     @config = c
+    @cgroup_name = c[:resource][:group] ? c[:resource][:group] : "mruby-virtual"
+    @cgroup_root = c[:resource][:root] ? c[:resource][:root] : "/cgroup"
+  end
+  def setup_mem_eventfd type, val, e
+    # TODO: implement memory method using libcgroup API
+    fd = 0
+    if type == :oom
+      fd = File.open("#{@cgroup_root}/memory/#{@cgroup_name}/memory.oom_control", "r").fileno
+      File.open("#{@cgroup_root}/memory/#{@cgroup_name}/cgroup.event_control", "w") { |evc| evc.write("#{e.fd} #{fd}") }
+    elsif type == :usage && val
+      fd = File.open("#{@cgroup_root}/memory/#{@cgroup_name}/memory.usage_in_bytes", "r").fileno
+      File.open("#{@cgroup_root}/memory/#{@cgroup_name}/cgroup.event_control", "w") { |evc| evc.write("#{e.fd} #{fd} #{val}") }
+    else
+      raise "invalid mem event type or resource config. :oom or :usage"
+    end
+    fd
+  end
+  # type :oom or :usage
+  def run_with_mem_eventfd type = :oom, val = nil, &b
+    e = Eventfd.new 0, 0
+    run_on_fork
+    fd = setup_mem_eventfd type, val, e
+    e.event_read &b
+    e.close
+    IO.new(fd).close
+  end
+  def run_on_fork
+    pid = Process.fork() do
+      run
+    end
   end
   def run
     setup_cgroup @config[:resource]
@@ -8,23 +38,20 @@ class Virtual
     setup_chroot @config[:jail]
   end
   def setup_cgroup_cpu config
-    group = config[:group] ? config[:group] : "mruby-virtual"
-    c = Cgroup::CPU.new group
+    c = Cgroup::CPU.new @cgroup_name
     c.cfs_quota_us = config[:cpu_quota]
     c.create
     c.attach
   end
   def setup_cgroup_blkio config
-    group = config[:group] ? config[:group] : "mruby-virtual"
-    io = Cgroup::BLKIO.new group
+    io = Cgroup::BLKIO.new @cgroup_name
     io.throttle_read_bps_device = "#{config[:blk_dvnd]} #{config[:blk_rbps]}" if config[:blk_rbps]
     io.throttle_write_bps_device = "#{config[:blk_dvnd]} #{config[:blk_wbps]}" if config[:blk_wbps]
     io.create
     io.attach
   end
   def setup_cgroup_mem config
-    group = config[:group] ? config[:group] : "mruby-virtual"
-    mem = Cgroup::MEMORY.new group
+    mem = Cgroup::MEMORY.new @cgroup_name
     mem.limit_in_bytes = config[:mem]
     mem.create
     mem.attach
