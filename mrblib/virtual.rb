@@ -1,11 +1,12 @@
 class Virtual
   def initialize c
     @config = c
+    @cgroup_name = c[:resource][:group] ? c[:resource][:group] : "mruby-virtual"
   end
   def setup_mem_eventfd e
     # TODO: implement memory method using libcgroup API
-    File.open("/cgroup/memory/httpd-jail/memory.oom_control", "r") do |oom|
-      File.open("/cgroup/memory/httpd-jail/cgroup.event_control", "w") { |evc| evc.write("#{e.fd} #{oom.fileno}") }
+    File.open("/cgroup/memory/#{@cgroup_name}/memory.oom_control", "r") do |oom|
+      File.open("/cgroup/memory/#{@cgroup_name}/cgroup.event_control", "w") { |evc| evc.write("#{e.fd} #{oom.fileno}") }
     end
   end
   def run_with_eventfd &b
@@ -26,23 +27,20 @@ class Virtual
     setup_chroot @config[:jail]
   end
   def setup_cgroup_cpu config
-    group = config[:group] ? config[:group] : "mruby-virtual"
-    c = Cgroup::CPU.new group
+    c = Cgroup::CPU.new @cgroup_name
     c.cfs_quota_us = config[:cpu_quota]
     c.create
     c.attach
   end
   def setup_cgroup_blkio config
-    group = config[:group] ? config[:group] : "mruby-virtual"
-    io = Cgroup::BLKIO.new group
+    io = Cgroup::BLKIO.new @cgroup_name
     io.throttle_read_bps_device = "#{config[:blk_dvnd]} #{config[:blk_rbps]}" if config[:blk_rbps]
     io.throttle_write_bps_device = "#{config[:blk_dvnd]} #{config[:blk_wbps]}" if config[:blk_wbps]
     io.create
     io.attach
   end
   def setup_cgroup_mem config
-    group = config[:group] ? config[:group] : "mruby-virtual"
-    mem = Cgroup::MEMORY.new group
+    mem = Cgroup::MEMORY.new @cgroup_name
     mem.limit_in_bytes = config[:mem]
     mem.create
     mem.attach
