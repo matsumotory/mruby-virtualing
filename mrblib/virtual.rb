@@ -2,6 +2,24 @@ class Virtual
   def initialize c
     @config = c
   end
+  def setup_mem_eventfd e
+    # TODO: implement memory method using libcgroup API
+    oom = File.open("/cgroup/memory/httpd-jail/memory.oom_control", "r")
+    msg = sprintf "%d %d", e.fd, oom.fileno
+    File.open("/cgroup/memory/httpd-jail/cgroup.event_control", "w") { |evc| evc.write(msg) }
+  end
+  def run_with_eventfd &b
+    e = Eventfd.new 0, 0
+    run_on_fork
+    setup_mem_eventfd e
+    e.event_read &b
+    e.close
+  end
+  def run_on_fork
+    pid = Process.fork() do
+      run
+    end
+  end
   def run
     setup_cgroup @config[:resource]
     setup_ipalias @config[:ip]
