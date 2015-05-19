@@ -53,8 +53,18 @@ Virtual.new({
   },
 
 }).run
-# callback memory limit event
+# callback memory limit event (default :oom)
 # }).run_with_mem_eventfd do |ret|
+#   puts "OOM KILLER!!! > #{ret}"
+# end
+
+# callback memory limit event for oom
+# }).run_with_mem_eventfd(:oom) do |ret|
+#   puts "OOM KILLER!!! > #{ret}"
+# end
+
+# callback memory limit event for usage(4MByte)
+# }).run_with_mem_eventfd(:usage, 4 * 1024 * 1024) do |ret|
 #   puts "OOM KILLER!!! > #{ret}"
 # end
 
