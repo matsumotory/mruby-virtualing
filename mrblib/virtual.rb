@@ -3,25 +3,25 @@ class Virtual
     @config = c
     @cgroup_name = c[:resource][:group] ? c[:resource][:group] : "mruby-virtual"
   end
-  def setup_mem_eventfd type, e
+  def setup_mem_eventfd type, val, e
     # TODO: implement memory method using libcgroup API
     fd = 0
     if type == :oom
       fd = File.open("/cgroup/memory/#{@cgroup_name}/memory.oom_control", "r").fileno
       File.open("/cgroup/memory/#{@cgroup_name}/cgroup.event_control", "w") { |evc| evc.write("#{e.fd} #{fd}") }
-    elsif type == :usage && @config[:resource][:mem]
+    elsif type == :usage && val
       fd = File.open("/cgroup/memory/#{@cgroup_name}/memory.usage_in_bytes", "r").fileno
-      File.open("/cgroup/memory/#{@cgroup_name}/cgroup.event_control", "w") { |evc| evc.write("#{e.fd} #{fd} #{@config[:resource][:mem]}") }
+      File.open("/cgroup/memory/#{@cgroup_name}/cgroup.event_control", "w") { |evc| evc.write("#{e.fd} #{fd} #{val}") }
     else
       raise "invalid mem event type or resource config. :oom or :usage"
     end
     fd
   end
   # type :oom or :usage
-  def run_with_mem_eventfd type = :oom, &b
+  def run_with_mem_eventfd type = :oom, val = nil, &b
     e = Eventfd.new 0, 0
     run_on_fork
-    fd = setup_mem_eventfd type, e
+    fd = setup_mem_eventfd type, val, e
     e.event_read &b
     e.close
     IO.new(fd).close
