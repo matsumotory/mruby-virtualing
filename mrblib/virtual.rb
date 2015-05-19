@@ -9,7 +9,7 @@ class Virtual
       File.open("/cgroup/memory/#{@cgroup_name}/cgroup.event_control", "w") { |evc| evc.write("#{e.fd} #{oom.fileno}") }
     end
   end
-  def run_with_eventfd &b
+  def run_with_mem_eventfd &b
     e = Eventfd.new 0, 0
     run_on_fork
     setup_mem_eventfd e

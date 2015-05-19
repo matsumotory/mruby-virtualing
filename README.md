@@ -53,6 +53,10 @@ Virtual.new({
   },
 
 }).run
+# callback memory limit event
+# }).run_with_mem_eventfd do |ret|
+#   puts "OOM KILLER!!! > #{ret}"
+# end
 
 # umount example
 # for dir in `mount | grep /var/httpd-jail | awk '{print $3}'`; do sudo umount $dir; done
