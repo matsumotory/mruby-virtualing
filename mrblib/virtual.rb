@@ -4,9 +4,9 @@ class Virtual
   end
   def setup_mem_eventfd e
     # TODO: implement memory method using libcgroup API
-    oom = File.open("/cgroup/memory/httpd-jail/memory.oom_control", "r")
-    msg = sprintf "%d %d", e.fd, oom.fileno
-    File.open("/cgroup/memory/httpd-jail/cgroup.event_control", "w") { |evc| evc.write(msg) }
+    File.open("/cgroup/memory/httpd-jail/memory.oom_control", "r") do |oom|
+      File.open("/cgroup/memory/httpd-jail/cgroup.event_control", "w") { |evc| evc.write("#{e.fd} #{oom.fileno}") }
+    end
   end
   def run_with_eventfd &b
     e = Eventfd.new 0, 0
