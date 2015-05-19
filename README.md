@@ -65,7 +65,7 @@ Virtual.new({
 
 # callback memory limit event for usage(4MByte)
 # }).run_with_mem_eventfd(:usage, 4 * 1024 * 1024) do |ret|
-#   puts "OOM KILLER!!! > #{ret}"
+#   puts "Usage Up or Down to threadshould !!! > #{ret}"
 # end
 
 # umount example
