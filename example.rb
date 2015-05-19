@@ -3,6 +3,7 @@ Virtual.new({
   :resource => {
 
     :group => "httpd-jail",
+    :root => "/cgroup",
 
     # CPU [msec] exc: 30000 -> 30%
     :cpu_quota => 30000,

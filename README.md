@@ -24,7 +24,13 @@ Virtual.new({
 
   :resource => {
 
+    # cgroup name
     :group => "httpd-jail",
+
+    # cgroup root path
+    # centos "/cgroup" by default
+    # ubuntu "/sys/fs/cgroup"
+    :root => "/cgroup"
 
     # CPU [msec] exc: 30000 -> 30%
     :cpu_quota => 30000,
