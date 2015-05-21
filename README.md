@@ -46,6 +46,8 @@ Virtual.new({
   },
 
   :jail => {
+    # use chroot instaed of jailing
+    # :jailing => false,
     :path => "/usr/local/bin/jailing",
     :root => "/tmp/apache",
     :bind => ["/usr/local/apache"],
