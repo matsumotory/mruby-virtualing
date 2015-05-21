@@ -34,7 +34,7 @@ class Virtual
   end
   def run
     setup_cgroup @config[:resource]
-    setup_ipalias @config[:ip]
+    setup_ipalias @config[:ip] if @config[:ip]
     setup_chroot @config[:jail]
   end
   def setup_cgroup_cpu config
@@ -63,6 +63,7 @@ class Virtual
     setup_cgroup_mem config if config[:mem]
   end
   def setup_ipalias config
+    raise "should set both [:ip][:vip] and [:ip][:dev]" if config[:vip].nil? || config[:dev].nil?
     # TODO: implement to mruby-netlink
     run_cmd = "ip addr add #{config[:vip]}/24 dev #{config[:dev]}"
     return if system("ip addr show #{config[:dev]} | grep #{config[:vip]}/24 -q")
