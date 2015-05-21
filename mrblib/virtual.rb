@@ -72,10 +72,14 @@ class Virtual
   end
   def setup_chroot config
     # TODO: implement to mruby-jailing
-    path = config[:path] ? config[:path] : "jailing"
-    bind_cmd = config[:bind].map {|dir| "--bind #{dir}" }.join(" ") if config[:bind]
-    robind_cmd = config[:ro_bind].map {|dir| "--robind #{dir}" }.join(" ") if config[:ro_bind]
-    run_cmd = "#{path} --root=#{config[:root]} #{bind_cmd} #{robind_cmd} -- #{config[:cmnd]}"
+    if ! config[:jailing].nil? && config[:jailing] == false
+      run_cmd = "chroot #{config[:root]} #{config[:cmnd]}"
+    else
+      path = config[:path] ? config[:path] : "jailing"
+      bind_cmd = config[:bind].map {|dir| "--bind #{dir}" }.join(" ") if config[:bind]
+      robind_cmd = config[:ro_bind].map {|dir| "--robind #{dir}" }.join(" ") if config[:ro_bind]
+      run_cmd = "#{path} --root=#{config[:root]} #{bind_cmd} #{robind_cmd} -- #{config[:cmnd]}"
+    end
     unless system(run_cmd)
       raise "setup chroot failed"
     end
