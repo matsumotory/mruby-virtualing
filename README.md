@@ -91,8 +91,13 @@ sudo ./virtualing httpd.rb
 
 ### auto memory expansion example
 ```ruby
-(snip)
-
+Virtual.new({
+#(snip)
+  :resource => {
+    #(snip)
+    :oom => false,
+  },
+#(snip)
 }).run_with_mem_eventfd_loop do |ret|
   puts "OOM KILLER!!! current memory: #{mem}"
   sleep 2
