@@ -42,6 +42,7 @@ Virtual.new({
 
     # Memory [Bytes]
     :mem => 512 * 1024 * 1024,
+    :oom => true,
 
   },
 

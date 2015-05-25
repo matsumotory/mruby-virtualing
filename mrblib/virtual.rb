@@ -53,6 +53,9 @@ class Virtual
   def setup_cgroup_mem config
     mem = Cgroup::MEMORY.new @cgroup_name
     mem.limit_in_bytes = config[:mem]
+    unless config[:oom].nil?
+      mem.oom_control = (config[:oom] == true) ? false : true
+    end
     mem.create
     mem.attach
   end
