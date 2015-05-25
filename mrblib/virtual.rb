@@ -7,18 +7,18 @@ class Virtual
   def setup_mem_eventfd type, val, e
     # TODO: implement memory method using libcgroup API
     fd = 0
-    while ! File.exist? "#{@cgroup_root}/memory/#{@cgroup_name}/memory.oom_control"
-      sleep 1
-    end
+    c = Cgroup::MEMORY.new @cgroup_name
+    c.modify
     if type == :oom
       fd = File.open("#{@cgroup_root}/memory/#{@cgroup_name}/memory.oom_control", "r").fileno
-      File.open("#{@cgroup_root}/memory/#{@cgroup_name}/cgroup.event_control", "w") { |evc| evc.write("#{e.fd} #{fd}") }
+      c.cgroup_event_control = "#{e.fd} #{fd}"
     elsif type == :usage && val
       fd = File.open("#{@cgroup_root}/memory/#{@cgroup_name}/memory.usage_in_bytes", "r").fileno
-      File.open("#{@cgroup_root}/memory/#{@cgroup_name}/cgroup.event_control", "w") { |evc| evc.write("#{e.fd} #{fd} #{val}") }
+      c.cgroup_event_control = "#{e.fd} #{fd} #{val}"
     else
       raise "invalid mem event type or resource config. :oom or :usage"
     end
+    c.modify
     fd
   end
   # type :oom or :usage
