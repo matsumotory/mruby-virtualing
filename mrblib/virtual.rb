@@ -7,6 +7,9 @@ class Virtual
   def setup_mem_eventfd type, val, e
     # TODO: implement memory method using libcgroup API
     fd = 0
+    while ! File.exist? "#{@cgroup_root}/memory/#{@cgroup_name}/memory.oom_control"
+      sleep 1
+    end
     if type == :oom
       fd = File.open("#{@cgroup_root}/memory/#{@cgroup_name}/memory.oom_control", "r").fileno
       File.open("#{@cgroup_root}/memory/#{@cgroup_name}/cgroup.event_control", "w") { |evc| evc.write("#{e.fd} #{fd}") }
@@ -23,7 +26,7 @@ class Virtual
     e = Eventfd.new 0, 0
     run_on_fork
     fd = setup_mem_eventfd type, val, e
-    e.event_read &b
+    loop { e.event_read &b }
     e.close
     IO.new(fd).close
   end
