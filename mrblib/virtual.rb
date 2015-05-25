@@ -34,9 +34,17 @@ class Virtual
     e = Eventfd.new 0, 0
     run_on_fork
     fd = setup_mem_eventfd type, val, e
+    Signal.trap(:INT) { |signo|
+      e.close
+      IO.new(fd).close
+      exit 1
+    }
+    Signal.trap(:TERM) { |signo|
+      e.close
+      IO.new(fd).close
+      exit 1
+    }
     loop { e.event_read &b }
-    e.close
-    IO.new(fd).close
   end
   def run_on_fork
     pid = Process.fork() do
