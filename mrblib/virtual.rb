@@ -26,6 +26,14 @@ class Virtual
     e = Eventfd.new 0, 0
     run_on_fork
     fd = setup_mem_eventfd type, val, e
+    e.event_read &b
+    e.close
+    IO.new(fd).close
+  end
+  def run_with_mem_eventfd_loop type = :oom, val = nil, &b
+    e = Eventfd.new 0, 0
+    run_on_fork
+    fd = setup_mem_eventfd type, val, e
     loop { e.event_read &b }
     e.close
     IO.new(fd).close
