@@ -88,3 +88,23 @@ Virtual.new({
 ```
 sudo ./virtualing httpd.rb
 ```
+
+### auto memory expansion example
+```ruby
+(snip)
+
+}).run_with_mem_eventfd_loop do |ret|
+  puts "OOM KILLER!!! current memory: #{mem}"
+  sleep 2
+  c = Cgroup::MEMORY.new group
+  mem = mem * 2
+  c.limit_in_bytes = mem
+  c.modify
+  puts "current memory expand to #{mem}"
+end
+```
+
+## License
+under the MIT License:
+- see LICENSE file
+
