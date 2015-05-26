@@ -1,4 +1,4 @@
-class Virtual
+class Virtualing
   include Cgroup
   def initialize c
     @config = c

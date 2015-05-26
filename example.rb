@@ -1,4 +1,4 @@
-Virtual.new({
+Virtualing.new({
 
   :resource => {
     # CPU [msec] exc: 30000 -> 30%

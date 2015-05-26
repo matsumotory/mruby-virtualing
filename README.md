@@ -20,7 +20,7 @@ and create `virtualing` binary into current directory.
 ## example
 ```ruby
 # httpd.rb
-Virtual.new({
+Virtualing.new({
 
   :resource => {
 
@@ -91,7 +91,7 @@ sudo ./virtualing httpd.rb
 
 ### auto memory expansion example
 ```ruby
-Virtual.new({
+Virtualing.new({
 #(snip)
   :resource => {
     #(snip)
@@ -101,7 +101,7 @@ Virtual.new({
 }).run_with_mem_eventfd_loop do |ret|
   puts "OOM KILLER!!! current memory: #{mem}"
   sleep 2
-  c = Virtual::MEMORY.new group
+  c = Virtualing::MEMORY.new group
   mem = mem * 2
   c.limit_in_bytes = mem
   c.modify
