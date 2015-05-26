@@ -1,4 +1,5 @@
 class Virtual
+  include Cgroup
   def initialize c
     @config = c
     @cgroup_name = c[:resource][:group] ? c[:resource][:group] : "mruby-virtual"
