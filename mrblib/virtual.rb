@@ -4,7 +4,7 @@ class Virtualing
     @config = c
     @cgroup_name = c[:resource][:group] ? c[:resource][:group] : "mruby-virtual"
     @cgroup_root = c[:resource][:root] ? c[:resource][:root] : "/cgroup"
-    if c[:jailing][:root].nil?
+    if c[:jail][:root].nil?
       raise ":jailing => {:root => chroot_paht} is always required."
     end
     @chroot_dir = c[:jailing][:root]
