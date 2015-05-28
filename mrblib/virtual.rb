@@ -15,16 +15,16 @@ class Virtualing
     end
   end
   def create_dir_into_chroot dir
-    unless File.directory? "#{CHROOT_DIR}/#{dir}"
-      run_cmd = "mkdir -p #{CHROOT_DIR}/#{dir}"
+    unless File.directory? "#{@chroot_dir}/#{dir}"
+      run_cmd = "mkdir -p #{@chroot_dir}/#{dir}"
       unless system run_cmd
         raise "mkdir failed: #{run_cmd}"
       end
     end
   end
   def bind_mount_into_chroot d
-    unless system("test -z '$(ls -A #{CHROOT_DIR}/#{d})'")
-      run_cmd = "mount --bind /#{d} #{CHROOT_DIR}/#{d}"
+    unless system("test -z '$(ls -A #{@chroot_dir}/#{d})'")
+      run_cmd = "mount --bind /#{d} #{@chroot_dir}/#{d}"
       unless system(run_cmd)
         raise "mount failed: #{run_cmd}"
       end
