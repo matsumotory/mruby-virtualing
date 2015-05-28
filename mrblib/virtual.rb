@@ -7,7 +7,7 @@ class Virtualing
     if c[:jail][:root].nil?
       raise ":jailing => {:root => chroot_paht} is always required."
     end
-    @chroot_dir = c[:jailing][:root]
+    @chroot_dir = c[:jail][:root]
   end
   def copy_into_chroot f
     unless system("cp -f #{f} #{@chroot_dir}#{f}")
