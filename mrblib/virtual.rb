@@ -9,17 +9,15 @@ class Virtualing
     end
     @chroot_dir = c[:jailing][:root]
   end
-
-
-  def self.copy_into_chroot
-    self.each do |f|
+  def copy_into_chroot files
+    files.each do |f|
       unless system("cp -f #{f} #{@chroot_dir}#{f}")
         raise "copy failed: #{f}"
       end
     end
   end
-  def self.create_dir_into_chroot
-    self.each do |d|
+  def create_dir_into_chroot dirs
+    dirs.each do |d|
       unless File.directory? "#{CHROOT_DIR}/#{dir}"
         run_cmd = "mkdir -p #{CHROOT_DIR}/#{dir}"
         unless system run_cmd
@@ -28,8 +26,8 @@ class Virtualing
       end
     end
   end
-  def self.bind_mount_into_chroot
-    self.each do |d|
+  def bind_mount_into_chroot dirs
+    dirs.each do |d|
       unless system("test -z '$(ls -A #{CHROOT_DIR}/#{d})'")
         run_cmd = "mount --bind /#{d} #{CHROOT_DIR}/#{d}"
         unless system(run_cmd)
