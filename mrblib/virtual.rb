@@ -4,6 +4,39 @@ class Virtualing
     @config = c
     @cgroup_name = c[:resource][:group] ? c[:resource][:group] : "mruby-virtual"
     @cgroup_root = c[:resource][:root] ? c[:resource][:root] : "/cgroup"
+    if c[:jailing][:root].nil?
+      raise ":jailing => {:root => chroot_paht} is always required."
+    end
+    @chroot_dir = c[:jailing][:root]
+  end
+
+
+  def self.copy_into_chroot
+    self.each do |f|
+      unless system("cp -f #{f} #{@chroot_dir}#{f}")
+        raise "copy failed: #{f}"
+      end
+    end
+  end
+  def self.create_dir_into_chroot
+    self.each do |d|
+      unless File.directory? "#{CHROOT_DIR}/#{dir}"
+        run_cmd = "mkdir -p #{CHROOT_DIR}/#{dir}"
+        unless system run_cmd
+          raise "mkdir failed: #{run_cmd}"
+        end
+      end
+    end
+  end
+  def self.bind_mount_into_chroot
+    self.each do |d|
+      unless system("test -z '$(ls -A #{CHROOT_DIR}/#{d})'")
+        run_cmd = "mount --bind /#{d} #{CHROOT_DIR}/#{d}"
+        unless system(run_cmd)
+          raise "mount failed: #{run_cmd}"
+        end
+      end
+    end
   end
   def setup_mem_eventfd type, val, e
     # TODO: implement memory method using libcgroup API
